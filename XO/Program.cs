@@ -37,15 +37,13 @@ $@"Числа клеток:
         }
         private static char check()
         {
-            var mid = cell(1, 1);
-            if (cell(0, 2) == mid && mid == cell(2, 0)
-                || cell(0, 0) == mid && mid == cell(2, 2))
-                return mid;
+            if (checkDiagonals())
+                return cell(1, 1);
 
             for (int i = 0; i < 3; i++)
-                if (cell(i, 0) == cell(i, 1) && cell(i, 1) == cell(i, 2))
+                if (checkLine(i))
                     return cell(i, 0);
-                else if (cell(0, i) == cell(1, i) && cell(1, i) == cell(2, i))
+                else if (checkLine(i, true))
                     return cell(0, i);
             return Symbols.Empty;
         }
@@ -86,9 +84,24 @@ $@"Числа клеток:
             }
         }
 
-        private static char cell(int row, int col)
+        private static char cell(int row, int col, bool switchDimensions = false)
         {
+            if (switchDimensions)
+                return cells[col * 3 + row];
             return cells[row * 3 + col];
+        }
+
+        private static bool checkLine(int i, bool switchDimensions = false)
+        {
+            return cell(i, 0, switchDimensions) == cell(i, 1, switchDimensions)
+                   && cell(i, 1, switchDimensions) == cell(i, 2, switchDimensions);
+        }
+
+        private static bool checkDiagonals()
+        {
+            var mid = cell(1, 1);
+            return cell(0, 2) == mid && mid == cell(2, 0)
+                   || cell(0, 0) == mid && mid == cell(2, 2);
         }
 
         private static string nameFromSymbol(char symbol)
